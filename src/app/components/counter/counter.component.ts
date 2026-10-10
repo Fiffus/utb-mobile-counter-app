@@ -36,9 +36,7 @@ export class CounterComponent {
   }
 
   decrement(): void {
-    if (this.count > 0) {
-      this.count--;
-    }
+    this.count--;
   }
 
   reset(): void {

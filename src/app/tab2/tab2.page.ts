@@ -16,6 +16,7 @@ import {
   IonSearchbar,
 } from '@ionic/angular';
 import { CounterService } from '../services/counter.service';
+import { SavedCounter } from '../models/saved-counter';
 
 @Component({
   selector: 'app-tab2',
@@ -42,19 +43,32 @@ export class Tab2Page implements OnInit {
   readonly counterService = inject(CounterService);
 
   readonly searchText = signal('');
+  readonly currentFilter = signal<'none' | 'positive' | 'negative'>('none');
   readonly sortOrder = signal<'default' | 'value' | 'name'>('default');
   readonly counters = computed(() => {
     const search = this.searchText().trim().toLocaleLowerCase();
     let list = this.counterService.counters().filter(counter => counter.name.toLocaleLowerCase().includes(search));
+
     switch (this.sortOrder()) {
       case 'value':
-        return list.sort((a, b) => b.value - a.value);
+        return this.applyFilter(list.sort((a, b) => b.value - a.value));
       case 'name':
-        return list.sort((a, b) => a.name.localeCompare(b.name));
+        return this.applyFilter(list.sort((a, b) => a.name.localeCompare(b.name)));
       default:
-        return list;
+        return this.applyFilter(list);
     }
   });
+
+  applyFilter(sorted: SavedCounter[]): SavedCounter[] {
+    switch (this.currentFilter()) {
+      case 'none':
+        return sorted;
+      case 'negative':
+        return sorted.filter(counter => counter.value < 0);
+      case 'positive':
+        return sorted.filter(counter => counter.value >= 0);
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     await this.counterService.initialize();
@@ -75,6 +89,18 @@ export class Tab2Page implements OnInit {
 
   async sortByName(): Promise<void> {
     this.sortOrder.set('name');
+  }
+
+  async noFilter(): Promise<void> {
+    this.currentFilter.set('none');
+  }
+
+  async filterPositive(): Promise<void> {
+    this.currentFilter.set('positive');
+  }
+
+  async filterNegative(): Promise<void> {
+    this.currentFilter.set('negative');
   }
 
   async toastMessage(message: string): Promise<void> {

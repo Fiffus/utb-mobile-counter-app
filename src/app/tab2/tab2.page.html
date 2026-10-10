@@ -35,6 +35,20 @@
       Řadit názvem
     </ion-button>
   </div>
+  <div class="filter-container">
+    <p>Filtry: </p>
+    <div>
+      <ion-button [color]="currentFilter() === 'none' ? 'success' : 'danger'" fill="outline" size="small" (click)="noFilter()">
+        Žádný
+      </ion-button>
+      <ion-button [color]="currentFilter() === 'positive' ? 'success' : 'danger'" fill="outline" size="small" (click)="filterPositive()">
+       Kladné
+      </ion-button>
+      <ion-button [color]="currentFilter() === 'negative' ? 'success' : 'danger'" fill="outline" size="small" (click)="filterNegative()">
+        Záporné
+      </ion-button>
+    </div>
+  </div>
 
   <ion-list>
     @for (counter of counters(); track counter.id) {
