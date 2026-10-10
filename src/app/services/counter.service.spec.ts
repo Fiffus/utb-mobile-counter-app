@@ -74,7 +74,9 @@ describe('CounterService', () => {
     getMock.mockResolvedValue({
       value: JSON.stringify([first, second]),
     });
+
     await service.initialize();
+
     expect(service.counters()).toEqual([first, second]);
     expect(service.initialized()).toBe(true);
   });
@@ -86,8 +88,8 @@ describe('CounterService', () => {
 
     await service.initialize();
     await service.add(first);
-    expect(service.counters()).toEqual([first, second]);
 
+    expect(service.counters()).toEqual([first, second]);
     expect(setMock).toHaveBeenCalledWith({
       key: 'saved-counters',
       value: JSON.stringify([first, second]),
@@ -116,13 +118,12 @@ describe('CounterService', () => {
 
     await service.initialize();
     await service.clear();
-    expect(service.counters()).toEqual([]);
 
+    expect(service.counters()).toEqual([]);
     expect(removeMock).toHaveBeenCalledTimes(1);
     expect(removeMock).toHaveBeenCalledWith({
       key: 'saved-counters',
     });
-
     expect(setMock).not.toHaveBeenCalled();
   });
 

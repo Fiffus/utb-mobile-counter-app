@@ -33,6 +33,10 @@ export class CounterService {
     await this.persist();
   }
 
+  totalValue(): number {
+    return this.counters().reduce((total, counter) => total + counter.value, 0);
+  }
+
   async clear(): Promise<void> {
     await this.initialize();
     this.countersState.set([]);
